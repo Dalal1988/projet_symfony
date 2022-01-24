@@ -1,13 +1,14 @@
 {% extends "base.html.twig" %}
 
-{% block main %}
+{% block body %}
 
 
-		{% for licence in licences %}
-			
-			<h2>{{ licence.name }}</h2>
-			<h3>{{ licence.description }}</h3>
+	{% for licence in licences %}
 
-		{% endfor %}
+		<h2>{{ licence.name }}</h2>
+		<img src="{{ asset ('images/' ~ licence.media) }}" alt="{{ licence.name }}">
+		
+	{% endfor %}
+
 
 {% endblock %}

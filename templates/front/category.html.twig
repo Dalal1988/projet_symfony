@@ -1,9 +1,13 @@
 {% extends "base.html.twig" %}
 
-{% block main %}
+{% block body %}
 
 
 	<h2>{{ category.name }}</h2>
-	<p>{{ category.description }}</p>
+	<img src="{{ asset('images/' ~ category.media) }}" alt="{{ category.name }}">
+	{% for product in category.products %}
+
+		<h2>{{ product.name }}</h2>
+		<img src="{{ asset ('images/' ~ product.images[0].src ) }}" alt="{{ product.images[0].alt }}">
 
 {% endblock %}

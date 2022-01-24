@@ -26,16 +26,22 @@
 
 					<ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
 						<li>
+							<a href="{{asset ('homePage.html.twig')}}" class="nav-link px-2 text-white">Accueil</a>
+						</li>
+						<li>
+							<a href="{{path ('product_list')}}" class="nav-link px-2 text-white">Produits</a>
+						</li>
+						<li>
 							<a href="{{path ('category_list')}}" class="nav-link px-2 text-white">Categories</a>
 						</li>
 						<li>
-							<a href="{{path ('brand_list')}}" class="nav-link px-2 text-white">Brands</a>
+							<a href="{{path ('licence_list')}}" class="nav-link px-2 text-white">Licences</a>
 						</li>
 						<li>
 							<a href="{{path ('contact')}}" class="nav-link px-2 text-white">Contactez-nous</a>
 						</li>
 						<li>
-							<a href="{{path ('user_insert')}}" class="nav-link px-2 text-white">S'inscrir</a>
+							<a href="{{path ('user_insert')}}" class="nav-link px-2 text-white">S'inscrire</a>
 						</li>
 					</ul>
 					<form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" action="{{ path ('admin_search') }}" method="get">
@@ -62,7 +68,7 @@
 			<footer class="py-3 my-4">
 				<ul class="nav justify-content-center border-bottom pb-3 mb-3">
 					<li class="nav-item">
-						<a href="{{path ('product_list')}}" class="nav-link px-2 text-muted">Home</a>
+						<a href="{{asset ('homePage.html.twig')}}" class="nav-link px-2 text-muted">Home</a>
 					</li>
 					<li class="nav-item">
 						<a href="{{path ('app_login')}}" class="nav-link px-2 text-muted">Sign in</a>

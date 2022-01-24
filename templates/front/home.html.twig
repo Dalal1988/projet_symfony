@@ -1,0 +1,12 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+	{% for product in category.products | slice(0, 3) %}
+
+		<img src="{{asset ("images/" ~ product.images[0].src)}}" alt="{{ product.images[0].alt }}">
+		<h2>{{ product.name }}</h2>
+
+	{% endfor %}
+
+{% endblock %}
