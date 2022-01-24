@@ -1,0 +1,103 @@
+licence_list:
+  path: licences
+  controller: App\Controller\Front\LicenceController::licenceList
+
+licence_show:
+  path: licence/{id}
+  controller: App\Controller\Front\LicenceController::licenceShow
+
+admin_licence_create:
+  path: admin/create/licence
+  controller: App\Controller\Admin\AdminLicenceController::adminLicenceCreate
+
+admin_licence_update:
+  path: admin/update/licence/{id}
+  controller: App\Controller\Admin\AdminLicenceController::adminUpdateLicence
+
+admin_licence_delete:
+  path: admin/delete/licence/{id}
+  controller: App\Controller\Admin\AdminLicenceController::adminDeleteLicence
+
+admin_licence_show:
+  path: admin/licence/{id}
+  controller: App\Controller\Admin\AdminLicenceController::adminShowLicence
+
+admin_licence_list:
+  path: admin/licences
+  controller: App\Controller\Admin\AdminLicenceController::adminListLicence
+
+product_list:
+  path: products
+  controller: App\Controller\Front\ProductController::productList
+
+product_show:
+  path: category/{id}
+  controller: App\Controller\Front\ProductController::productShow
+
+admin_product_list:
+  path: admin/products
+  controller: App\Controller\Admin\AdminProductController::productList
+
+admin_product_show:
+  path: admin/product/{id}
+  controller: App\Controller\Admin\AdminProductController::productShow
+
+admin_product_update:
+  path: admin/update/product/{id}
+  controller: App\Controller\Admin\AdminProductController::productUpdate
+
+admin_product_create:
+  path: admin/create/product
+  controller: App\Controller\Admin\AdminProductController::createProduct
+
+admin_product_delete:
+  path: admin/delete/product/{id}
+  controller: App\Controller\Admin\AdminProductController::deletProduct
+
+category_list:
+  path: categories
+  controller: App\Controller\Front\CategoryController::categoryList
+
+category_show:
+  path: category/{id}
+  controller: App\Controller\Front\CategoryController::categoryShow
+
+admin_category_update:
+  path: admin/update/category/{id}
+  controller: App\Controller\Admin\AdminCategoryController::categoryUpdate
+
+admin_category_create:
+  path: admin/create/category/
+  controller: App\Controller\Admin\AdminCategoryController::adminCategoryCreate
+
+admin_category_delete:
+  path: admin/delete/category/{id}
+  controller: App\Controller\Admin\AdminCategoryController::adminDeleteCategory
+
+admin_category_show:
+  path: admin/category/{id}
+  controller: App\Controller\Admin\AdminCategoryController::adminShowCategory
+
+admin_category_list:
+  path: admin/categories
+  controller: App\Controller\Admin\AdminCategoryController::adminListCategory
+
+create_image:
+  path: admin/create/image
+  controller: App\Controller\Admin\AdminImageController::createImage
+
+update_image:
+  path: admin/update/image/{id}
+  controller: App\Controller\Admin\AdminImageController::updateImage
+
+delete_image:
+  path: admin/delete/image/{id}
+  controller: App\Controller\Admin\AdminImageController::deleteImage
+
+image_list:
+  path: admin/images
+  controller: App\Controller\Admin\AdminImageController::imageList
+
+image_show:
+  path: admin/image/{id}
+  controller: App\Controller\Admin\AdminImageController::imageShow
