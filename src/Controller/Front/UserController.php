@@ -17,9 +17,9 @@ class UserController extends AbstractController
 {
 
     /**
-     * @Route("user/insert/", name="user_insert")
+     * @Route("user/insert", name="user_insert")
      */
-    public function insertUser(
+    public function userInsert(
         Request $request,
         EntityManagerInterface $entityManagerInterface,
         UserPasswordHasherInterface $userPasswordHasherInterface,
@@ -34,25 +34,24 @@ class UserController extends AbstractController
 
         if ($userForm->isSubmitted() && $userForm->isValid()) {
             $user->setRoles(["ROLE_USER"]);
+            $user->setDate(new \DateTime("NOW"));
 
             $plainPassword = $userForm->get('password')->getData();
-            $user_email = $userForm->get('email')->getData();
-            $user_name = $userForm->get('name')->getData();
-            $user_firstname =  $userForm->get('firstname')->getData();
-
             $hashedPassword = $userPasswordHasherInterface->hashPassword($user, $plainPassword);
-
             $user->setPassword($hashedPassword);
 
-            $entityManagerInterface->persist($user);
+            $user_mail = $userForm->get('email')->getData();
+            $user_name = $userForm->get('name')->getData();
+            $user_firstname = $userForm->get('firstname')->getData();
 
+            $entityManagerInterface->persist($user);
             $entityManagerInterface->flush();
 
             $email = (new TemplatedEmail())
                 ->from('test@test.com')
-                ->to($user_email)
+                ->to($user_mail)
                 ->subject('Inscription')
-                ->htmlTemplate('front/mail.html.twig')
+                ->htmlTemplate('front/email.html.twig')
                 ->context([
                     'name' => $user_name,
                     'firstname' => $user_firstname
@@ -60,8 +59,7 @@ class UserController extends AbstractController
 
             $mailerInterface->send($email);
 
-
-            return $this->redirectToRoute('article_list');
+            return $this->redirectToRoute('front_home');
         }
 
         return $this->render("front/userform.html.twig", ['userForm' => $userForm->createView()]);
@@ -77,10 +75,9 @@ class UserController extends AbstractController
         UserRepository $userRepository
     ) {
 
-        // récupère le user connecté
         $user_connect = $this->getUser();
 
-        $user_mail =  $user_connect->getUserIdentifier();
+        $user_mail = $user_connect->getUserIdentifier();
 
         $user = $userRepository->findOneBy(['email' => $user_mail]);
 
@@ -89,18 +86,21 @@ class UserController extends AbstractController
         $userForm->handleRequest($request);
 
         if ($userForm->isSubmitted() && $userForm->isValid()) {
+            $user->setRoles(["ROLE_USER"]);
+            $user->setDate(new \DateTime("NOW"));
 
             $plainPassword = $userForm->get('password')->getData();
-
             $hashedPassword = $userPasswordHasherInterface->hashPassword($user, $plainPassword);
-
             $user->setPassword($hashedPassword);
 
-            $entityManagerInterface->persist($user);
+            $user_mail = $userForm->get('email')->getData();
+            $user_name = $userForm->get('name')->getData();
+            $user_firstname = $userForm->get('firstname')->getData();
 
+            $entityManagerInterface->persist($user);
             $entityManagerInterface->flush();
 
-            return $this->redirectToRoute('article_list');
+            return $this->redirectToRoute('front_home');
         }
 
         return $this->render("front/userform.html.twig", ['userForm' => $userForm->createView()]);
@@ -109,8 +109,11 @@ class UserController extends AbstractController
     /**
      * @Route("delete/user", name="delete_user")
      */
-    public function deleteUser(UserRepository $userRepository, EntityManagerInterface $entityManagerInterface)
-    {
+    public function deleteUser(
+        UserRepository $userRepository,
+        EntityManagerInterface $entityManagerInterface
+    ) {
+
         $user_connect = $this->getUser();
 
         $user_mail = $user_connect->getUserIdentifier();
@@ -121,6 +124,6 @@ class UserController extends AbstractController
 
         $entityManagerInterface->flush();
 
-        return $this->redirectToRoute('article_list');
+        return $this->redirectToRoute('front_home');
     }
 }

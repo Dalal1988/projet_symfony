@@ -35,23 +35,31 @@ class Product
     private $stock;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="products")
-     */
-    private $category;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Licence::class, inversedBy="products")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $licence;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="products")
+     * @ORM\JoinColumn(onDelete="CASCADE")
+     */
+    private $category;
 
     /**
      * @ORM\OneToMany(targetEntity=Image::class, mappedBy="product")
      */
     private $images;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="product")
+     */
+    private $comments;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -95,18 +103,6 @@ class Product
         return $this;
     }
 
-    public function getCategory(): ?Category
-    {
-        return $this->category;
-    }
-
-    public function setCategory(?Category $category): self
-    {
-        $this->category = $category;
-
-        return $this;
-    }
-
     public function getLicence(): ?Licence
     {
         return $this->licence;
@@ -115,6 +111,18 @@ class Product
     public function setLicence(?Licence $licence): self
     {
         $this->licence = $licence;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }
@@ -143,6 +151,36 @@ class Product
             // set the owning side to null (unless already changed)
             if ($image->getProduct() === $this) {
                 $image->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getProduct() === $this) {
+                $comment->setProduct(null);
             }
         }
 

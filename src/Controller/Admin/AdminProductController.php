@@ -6,24 +6,17 @@ use App\Entity\Product;
 use App\Form\ProductType;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AdminProductController extends AbstractController
 {
 
-    // Pour les trois entités (Product, Category, Brand): faire le CRUD complet dans
-    // des AdminController
-
-    // Modèle des routes @Route("/admin/create/product/", name="admin_create_product")
-    // Bonus : trouver un moyen de pouvoir supprimer des catégories et des brands même
-    // si elles sont liés à un product
-
     /**
      * @Route("admin/products", name="admin_product_list")
      */
-    public function adminListProduct(ProductRepository $productRepository)
+    public function productList(ProductRepository $productRepository)
     {
         $products = $productRepository->findAll();
 
@@ -33,7 +26,7 @@ class AdminProductController extends AbstractController
     /**
      * @Route("admin/product/{id}", name="admin_product_show")
      */
-    public function adminShowProduct($id, ProductRepository $productRepository)
+    public function productShow(ProductRepository $productRepository, $id)
     {
         $product = $productRepository->find($id);
 
@@ -41,13 +34,13 @@ class AdminProductController extends AbstractController
     }
 
     /**
-     * @Route("admin/update/product/{id}", name="admin_update_product")
+     * @Route("admin/update/product/{id}", name="product_update")
      */
-    public function adminUpdateProduct(
-        $id,
+    public function productUpdate(
         ProductRepository $productRepository,
         Request $request,
-        EntityManagerInterface $entityManagerInterface
+        EntityManagerInterface $entityManagerInterface,
+        $id
     ) {
 
         $product = $productRepository->find($id);
@@ -57,20 +50,20 @@ class AdminProductController extends AbstractController
         $productForm->handleRequest($request);
 
         if ($productForm->isSubmitted() && $productForm->isValid()) {
+
             $entityManagerInterface->persist($product);
             $entityManagerInterface->flush();
 
             return $this->redirectToRoute("admin_product_list");
         }
 
-
         return $this->render("admin/productform.html.twig", ['productForm' => $productForm->createView()]);
     }
 
     /**
-     * @Route("admin/create/product/", name="admin_product_create")
+     * @Route("admin/create/product", name="product_create")
      */
-    public function adminProductCreate(Request $request, EntityManagerInterface $entityManagerInterface)
+    public function productCreate(Request $request, EntityManagerInterface $entityManagerInterface)
     {
         $product = new Product();
 
@@ -79,23 +72,23 @@ class AdminProductController extends AbstractController
         $productForm->handleRequest($request);
 
         if ($productForm->isSubmitted() && $productForm->isValid()) {
+
             $entityManagerInterface->persist($product);
             $entityManagerInterface->flush();
 
             return $this->redirectToRoute("admin_product_list");
         }
 
-
         return $this->render("admin/productform.html.twig", ['productForm' => $productForm->createView()]);
     }
 
     /**
-     * @Route("admin/delete/product/{id}", name="admin_delete_product")
+     * @Route("admin/delete/product/{id}", name="product_delete")
      */
-    public function adminDeleteProduct(
+    public function productDelete(
         $id,
-        ProductRepository $productRepository,
-        EntityManagerInterface $entityManagerInterface
+        EntityManagerInterface $entityManagerInterface,
+        ProductRepository $productRepository
     ) {
 
         $product = $productRepository->find($id);

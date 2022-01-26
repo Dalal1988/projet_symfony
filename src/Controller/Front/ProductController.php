@@ -2,15 +2,17 @@
 
 namespace App\Controller\Front;
 
+use App\Entity\Comment;
+use App\Form\CommentType;
 use App\Repository\ProductRepository;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ProductController extends AbstractController
 {
-
-    // Faire la fonction qui affiche la liste des produits
-    // Ainsi que celle qui affiche un produit en particulier.
 
     /**
      * @Route("products", name="product_list")
@@ -25,10 +27,58 @@ class ProductController extends AbstractController
     /**
      * @Route("product/{id}", name="product_show")
      */
-    public function productShow($id, ProductRepository $productRepository)
-    {
+    public function productShow(
+        ProductRepository $productRepository,
+        $id,
+        Request $request,
+        EntityManagerInterface $entityManagerInterface,
+        UserRepository $userRepository
+    ) {
         $product = $productRepository->find($id);
 
-        return $this->render("front/product.html.twig", ['product' => $product]);
+        $comment = new Comment();
+
+        $commentForm = $this->createForm(CommentType::class, $comment);
+
+        $commentForm->handleRequest($request);
+
+        if ($commentForm->isSubmitted() && $commentForm->isValid()) {
+            $user = $this->getUser();
+            if ($user) {
+                $user_mail = $user->getUserIdentifier();
+                $user = $userRepository->findOneBy(['email' => $user_mail]);
+
+                $comment->setUser($user);
+                $comment->setProduct($product);
+                $comment->setDate(new \DateTime("NOW"));
+
+                $entityManagerInterface->persist($comment);
+                $entityManagerInterface->flush();
+            }
+        }
+
+
+
+        return $this->render("front/product.html.twig", [
+            'product' => $product,
+            'commentForm' => $commentForm->createView()
+        ]);
+    }
+
+    /**
+     * @Route("search", name="front_search")
+     */
+
+    public function frontSearch(Request $request, ProductRepository $productRepository)
+    {
+
+        // Récupérer les données rentrées dans le formulaire
+        $term = $request->query->get('term');
+        // query correspond à l'outil qui permet de récupérer les données d'un formulaire en get
+        // pour un formulaire en post on utilise request
+
+        $products = $productRepository->searchByTerm($term);
+
+        return $this->render('front/search.html.twig', ['products' => $products, 'term' => $term]);
     }
 }

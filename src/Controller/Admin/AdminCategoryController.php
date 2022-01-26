@@ -6,31 +6,41 @@ use App\Entity\Category;
 use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 class AdminCategoryController extends AbstractController
 {
 
-    public function adminListCategory(CategoryRepository $categoryRepository)
+    /**
+     * @Route("admin/categories", name="admin_category_list")
+     */
+    public function categoryList(CategoryRepository $categoryRepository)
     {
         $categories = $categoryRepository->findAll();
 
         return $this->render("admin/categories.html.twig", ['categories' => $categories]);
     }
 
-    public function adminShowCategory($id, CategoryRepository $categoryRepository)
+    /**
+     * @Route("admin/category/{id}", name="admin_category_show")
+     */
+    public function categoryShow(CategoryRepository $categoryRepository, $id)
     {
         $category = $categoryRepository->find($id);
 
         return $this->render("admin/category.html.twig", ['category' => $category]);
     }
 
-    public function adminUpdateCategory(
-        $id,
+    /**
+     * @Route("admin/update/category/{id}", name="category_update")
+     */
+    public function categoryUpdate(
         CategoryRepository $categoryRepository,
         Request $request,
-        EntityManagerInterface $entityManagerInterface
+        EntityManagerInterface $entityManagerInterface,
+        $id
     ) {
 
         $category = $categoryRepository->find($id);
@@ -47,11 +57,13 @@ class AdminCategoryController extends AbstractController
             return $this->redirectToRoute("admin_category_list");
         }
 
-
         return $this->render("admin/categoryform.html.twig", ['categoryForm' => $categoryForm->createView()]);
     }
 
-    public function adminCategoryCreate(Request $request, EntityManagerInterface $entityManagerInterface)
+    /**
+     * @Route("admin/create/category", name="category_create")
+     */
+    public function categoryCreate(Request $request, EntityManagerInterface $entityManagerInterface)
     {
         $category = new Category();
 
@@ -67,14 +79,16 @@ class AdminCategoryController extends AbstractController
             return $this->redirectToRoute("admin_category_list");
         }
 
-
         return $this->render("admin/categoryform.html.twig", ['categoryForm' => $categoryForm->createView()]);
     }
 
-    public function adminDeleteCategory(
+    /**
+     * @Route("admin/delete/category/{id}", name="category_delete")
+     */
+    public function categoryDelete(
         $id,
-        CategoryRepository $categoryRepository,
-        EntityManagerInterface $entityManagerInterface
+        EntityManagerInterface $entityManagerInterface,
+        CategoryRepository $categoryRepository
     ) {
 
         $category = $categoryRepository->find($id);

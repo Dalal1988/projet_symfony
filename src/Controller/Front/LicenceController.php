@@ -3,8 +3,8 @@
 namespace App\Controller\Front;
 
 use App\Repository\LicenceRepository;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
 
 class LicenceController extends AbstractController
 {
